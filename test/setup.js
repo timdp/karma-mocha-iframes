@@ -68,9 +68,13 @@ window.expect = window.chai.expect
     document.body.appendChild(iframe)
 
     var fileIncluded = function (uri) {
+      var dotIdx = uri.lastIndexOf('.')
+      if (dotIdx >= 0 && uri.substr(dotIdx + 1) !== 'js') {
+        return false
+      }
       var parts = uri.split('/')
-      var idx = parts.indexOf('node_modules')
-      return (idx < 0 || parts[idx + 1].substr(0, 6) !== 'karma-')
+      var nmIdx = parts.indexOf('node_modules')
+      return (nmIdx < 0 || parts[nmIdx + 1].substr(0, 6) !== 'karma-')
     }
 
     window.Mocha.Runner.prototype.runTest = function (fn) {
