@@ -28,7 +28,7 @@
     if (err != null) {
       console.error(err)
     } else {
-      window.mocha.grep(config.test)
+      window.mocha.grep('^' + config.test.replace(/(\W)/g, '\\$1') + '$')
       window.mocha.run()
     }
   })
