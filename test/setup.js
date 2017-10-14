@@ -67,12 +67,18 @@ window.expect = window.chai.expect
     assign(iframe.style, IFRAME_STYLES)
     document.body.appendChild(iframe)
 
+    var fileIncluded = function (uri) {
+      var parts = uri.split('/')
+      var idx = parts.indexOf('node_modules')
+      return (idx < 0 || parts[idx + 1].substr(0, 6) !== 'karma-')
+    }
+
     window.Mocha.Runner.prototype.runTest = function (fn) {
       currentTest = this.test.fullTitle()
       testCallback = fn
       iframe.src = '/base/fixtures/host.html#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
-        files: keys(window.__karma__.files)
+        files: keys(window.__karma__.files).filter(fileIncluded)
       }))
     }
   }
