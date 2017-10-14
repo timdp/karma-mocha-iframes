@@ -12,7 +12,7 @@ module.exports = function (config) {
     'middleware:fixtures': ['factory', fixturesMiddlewareFactory]
   })
   config.set({
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS', 'Chrome', 'Firefox'],
     frameworks: ['mocha', 'dirty-chai'],
     files: ['test/setup.js', 'test/**/*.spec.js'],
     reporters: ['spec'],
