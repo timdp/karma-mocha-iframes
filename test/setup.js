@@ -70,7 +70,7 @@ window.expect = window.chai.expect
     window.Mocha.Runner.prototype.runTest = function (fn) {
       currentTest = this.test.fullTitle()
       testCallback = fn
-      iframe.src = '/fixtures/host.html#' + encodeURIComponent(JSON.stringify({
+      iframe.src = '/base/fixtures/host.html#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
         files: keys(window.__karma__.files)
       }))

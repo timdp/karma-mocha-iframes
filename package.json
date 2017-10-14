@@ -8,7 +8,6 @@
   "dependencies": {
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "express": "^4.16.2",
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-dirty-chai": "^1.0.2",
