@@ -82,15 +82,16 @@ window.expect = window.chai.expect
       return (nmIdx < 0 || parts[nmIdx + 1].substr(0, 6) !== 'karma-')
     }
 
+    var loc = window.location
+    var hostname = (loc.protocol === 'http:' && HOSTNAME_MAP.hasOwnProperty(loc.hostname))
+      ? HOSTNAME_MAP[loc.hostname]
+      : loc.hostname
+    var hostHtmlUrl = loc.protocol + '//' + hostname + ':' + loc.port +
+      '/base/fixtures/host.html'
+
     window.Mocha.Runner.prototype.runTest = function (fn) {
       currentTest = this.test.fullTitle()
       testCallback = fn
-      var loc = window.location
-      var hostname = (loc.protocol === 'http:' && HOSTNAME_MAP.hasOwnProperty(loc.hostname))
-        ? HOSTNAME_MAP[loc.hostname]
-        : loc.hostname
-      var hostHtmlUrl = loc.protocol + '//' + hostname + ':' + loc.port +
-        '/base/fixtures/host.html'
       iframe.src = hostHtmlUrl + '#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
         files: keys(window.__karma__.files).filter(fileIncluded)
