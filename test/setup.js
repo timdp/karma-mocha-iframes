@@ -4,7 +4,7 @@ window.expect = window.chai.expect
   var assign = function () {
     var args = Array.apply(null, arguments)
     var result = args.shift()
-    for (let i = 0; i < args.length; ++i) {
+    for (var i = 0; i < args.length; ++i) {
       var obj = args[i]
       if (obj == null) {
         continue
