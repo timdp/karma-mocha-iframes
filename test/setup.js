@@ -79,7 +79,7 @@ window.expect = window.chai.expect
 
   var runGuest = function (config) {
     var respond = function (test, error) {
-      const msg = JSON.stringify({
+      var msg = JSON.stringify({
         test: test.fullTitle(),
         error: (error == null) ? null : {
           name: error.name,
