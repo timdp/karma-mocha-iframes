@@ -40,6 +40,11 @@ window.expect = window.chai.expect
       padding: '0'
     }
 
+    var HOSTNAME_MAP = {
+      'localhost': '127.0.0.1',
+      '127.0.0.1': 'localhost'
+    }
+
     var currentTest, testCallback
 
     var handleResult = function (error) {
@@ -80,7 +85,13 @@ window.expect = window.chai.expect
     window.Mocha.Runner.prototype.runTest = function (fn) {
       currentTest = this.test.fullTitle()
       testCallback = fn
-      iframe.src = '/base/fixtures/host.html#' + encodeURIComponent(JSON.stringify({
+      var loc = window.location
+      var hostname = (loc.protocol === 'http:' && HOSTNAME_MAP.hasOwnProperty(loc.hostname))
+        ? HOSTNAME_MAP[loc.hostname]
+        : loc.hostname
+      var hostHtmlUrl = loc.protocol + '//' + hostname + ':' + loc.port +
+        '/base/fixtures/host.html'
+      iframe.src = hostHtmlUrl + '#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
         files: keys(window.__karma__.files).filter(fileIncluded)
       }))
