@@ -18,6 +18,11 @@
   "dependencies": {
     "slash": "^1.0.0"
   },
+  "peerDependencies": {
+    "karma": "*",
+    "karma-mocha": "*",
+    "mocha": "^4.0.0"
+  },
   "devDependencies": {
     "standard": "^10.0.3"
   },
