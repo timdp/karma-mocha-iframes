@@ -1,7 +1,7 @@
 {
   "name": "karma-mocha-iframes",
   "description": "Runs every Mocha-based Karma test in its own iframe.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Tim De Pauw <hi@tmdpw.eu> (https://tmdpw.eu/)",
   "main": "index.js",
   "engines": {
