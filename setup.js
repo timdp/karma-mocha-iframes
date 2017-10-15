@@ -40,6 +40,8 @@
   }
 
   var runHost = function () {
+    var PKG = 'karma-mocha-iframes'
+
     var port = window.__karma__.port
 
     var defaultIframeStyles = {
@@ -101,7 +103,8 @@
       }
       var parts = uri.split('/')
       var nmIdx = parts.indexOf('node_modules')
-      return (nmIdx < 0 || parts[nmIdx + 1].substr(0, 6) !== 'karma-')
+      return (nmIdx < 0 || parts[nmIdx + 1] === PKG ||
+        parts[nmIdx + 1].substr(0, 6) !== 'karma-')
     }
 
     var loc = window.location
@@ -112,7 +115,7 @@
 
     var files = keys(window.__karma__.files)
     var setupUrl = find(files, function (file) {
-      return endsWith(file, '/karma-mocha-iframes/setup.js')
+      return endsWith(file, '/' + PKG + '/setup.js')
     })
     var baseUri = origin + setupUrl.substr(0, setupUrl.lastIndexOf('/'))
 
