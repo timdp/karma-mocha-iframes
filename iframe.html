@@ -20,6 +20,7 @@
         var script = document.createElement('script')
         script.addEventListener('load', next)
         script.addEventListener('error', onError)
+        script.crossOrigin = 'anonymous'
         script.src = url
         document.body.appendChild(script)
       }
