@@ -3,6 +3,13 @@
   "description": "Runs every Mocha-based Karma test in its own iframe.",
   "version": "0.2.0",
   "author": "Tim De Pauw <hi@tmdpw.eu> (https://tmdpw.eu/)",
+  "keywords": [
+    "karma-plugin",
+    "mocha",
+    "iframe",
+    "isolate",
+    "isolation"
+  ],
   "main": "index.js",
   "engines": {
     "node": ">=6"
