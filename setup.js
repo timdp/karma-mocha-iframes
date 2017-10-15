@@ -1,5 +1,3 @@
-window.expect = window.chai.expect
-
 ;(function () {
   var assign = function () {
     var args = Array.apply(null, arguments)
@@ -28,8 +26,23 @@ window.expect = window.chai.expect
     return result
   }
 
+  var find = function (arr, pred) {
+    for (var i = 0; i < arr.length; ++i) {
+      if (pred(arr[i], i, arr)) {
+        return arr[i]
+      }
+    }
+    return null
+  }
+
+  var endsWith = function (str, suf) {
+    return (str.length >= suf.length && str.substr(str.length - suf.length) === suf)
+  }
+
   var runHost = function () {
-    var IFRAME_STYLES = {
+    var port = window.__karma__.port
+
+    var defaultIframeStyles = {
       position: 'absolute',
       left: '0',
       top: '0',
@@ -40,10 +53,19 @@ window.expect = window.chai.expect
       padding: '0'
     }
 
-    var HOSTNAME_MAP = {
-      'localhost': '127.0.0.1',
-      '127.0.0.1': 'localhost'
-    }
+    var defaultRewrites = {}
+    var host1 = 'http://localhost:' + port
+    var host2 = 'http://127.0.0.1:' + port
+    defaultRewrites[host1] = host2
+    defaultRewrites[host2] = host1
+
+    var settings = (window.__karma__.client != null)
+      ? window.__karma__.client.karmaMochaIframes
+      : null
+    settings = assign({}, settings, {
+      iframeStyles: defaultIframeStyles,
+      rewrites: defaultRewrites
+    })
 
     var currentTest, testCallback
 
@@ -69,7 +91,7 @@ window.expect = window.chai.expect
 
     var iframe = document.createElement('iframe')
     iframe.src = 'about:blank'
-    assign(iframe.style, IFRAME_STYLES)
+    assign(iframe.style, settings.iframeStyles)
     document.body.appendChild(iframe)
 
     var fileIncluded = function (uri) {
@@ -83,18 +105,23 @@ window.expect = window.chai.expect
     }
 
     var loc = window.location
-    var hostname = (loc.protocol === 'http:' && HOSTNAME_MAP.hasOwnProperty(loc.hostname))
-      ? HOSTNAME_MAP[loc.hostname]
-      : loc.hostname
-    var guestHtmlUrl = loc.protocol + '//' + hostname + ':' + loc.port +
-      '/base/fixtures/guest.html'
+    var origin = loc.protocol + '//' + loc.host
+    if (settings.rewrites[origin] != null) {
+      origin = settings.rewrites[origin]
+    }
+
+    var files = keys(window.__karma__.files)
+    var setupUrl = find(files, function (file) {
+      return endsWith(file, '/karma-mocha-iframes/setup.js')
+    })
+    var baseUri = origin + setupUrl.substr(0, setupUrl.lastIndexOf('/'))
 
     window.Mocha.Runner.prototype.runTest = function (fn) {
       currentTest = this.test.fullTitle()
       testCallback = fn
-      iframe.src = guestHtmlUrl + '#' + encodeURIComponent(JSON.stringify({
+      iframe.src = baseUri + '/iframe.html' + '#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
-        files: keys(window.__karma__.files).filter(fileIncluded)
+        files: files.filter(fileIncluded)
       }))
     }
   }

@@ -7,9 +7,6 @@
 <script>
 (function () {
   var loadScripts = function (urls, done) {
-    if (done == null) {
-      done = function () {}
-    }
     var i = 0
     var onError = function () {
       done(new Error('Error loading ' + urls[i - 1]))

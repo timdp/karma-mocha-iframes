@@ -1,27 +1,27 @@
 {
   "name": "karma-mocha-iframes",
+  "description": "Runs every Mocha-based Karma test in its own iframe.",
   "version": "0.0.0",
-  "private": true,
+  "author": "Tim De Pauw <hi@tmdpw.eu> (https://tmdpw.eu/)",
+  "main": "index.js",
+  "engines": {
+    "node": ">=6"
+  },
   "scripts": {
-    "test": "karma start --single-run"
+    "test": "standard"
   },
+  "files": [
+    "index.js",
+    "setup.js",
+    "iframe.html"
+  ],
   "dependencies": {
-    "chai": "^4.1.2",
-    "dirty-chai": "^2.0.1",
-    "karma": "^1.7.1",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-dirty-chai": "^1.0.2",
-    "karma-firefox-launcher": "^1.0.1",
-    "karma-mocha": "^1.3.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-spec-reporter": "0.0.31",
-    "mocha": "^4.0.1"
+    "slash": "^1.0.0"
   },
-  "standard": {
-    "globals": [
-      "describe",
-      "it",
-      "expect"
-    ]
-  }
+  "devDependencies": {
+    "standard": "^10.0.3"
+  },
+  "repository": "timdp/karma-mocha-iframes",
+  "bugs": "https://github.com/timdp/karma-mocha-iframes/issues",
+  "license": "MIT"
 }
