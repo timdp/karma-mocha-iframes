@@ -79,14 +79,23 @@
     }
 
     var onMessage = function (event) {
-      var result = null
+      var msg = null
       try {
-        result = JSON.parse(event.data)
+        msg = JSON.parse(event.data)
       } catch (err) {
         return
       }
-      if (result != null && result.test === currentTest) {
-        handleResult(result.error)
+      if (msg == null) {
+        return
+      }
+      var data = msg.data
+      switch (msg.type) {
+        case 'result':
+          handleResult(data.error)
+          break
+        case 'console':
+          console[data.level].apply(console, data.args)
+          break
       }
     }
     window.addEventListener('message', onMessage, false)
@@ -133,8 +142,33 @@
   }
 
   var runGuest = function (config) {
-    var respond = function (test, error) {
+    var send = function (type, data) {
       var msg = JSON.stringify({
+        type: type,
+        data: data
+      })
+      window.parent.postMessage(msg, '*')
+    }
+
+    var proxyConsole = function (level) {
+      var original = console[level]
+      if (typeof original !== 'function') {
+        return
+      }
+      console[level] = function () {
+        original.apply(console, arguments)
+        try {
+          var args = Array.apply(null, arguments)
+          send('console', {
+            level: level,
+            args: args
+          })
+        } catch (err) {}
+      }
+    }
+
+    var respond = function (test, error) {
+      send('result', {
         test: test.fullTitle(),
         error: (error == null) ? null : {
           name: error.name,
@@ -142,7 +176,13 @@
           stack: error.stack
         }
       })
-      window.parent.postMessage(msg, '*')
+    }
+
+    if (config.karma.config.captureConsole) {
+      var levels = keys(console)
+      for (var i = 0; i < levels.length; ++i) {
+        proxyConsole(levels[i])
+      }
     }
 
     window.mocha.setup({
