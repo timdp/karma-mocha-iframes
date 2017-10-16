@@ -124,7 +124,10 @@
       testCallback = fn
       iframe.src = baseUri + '/iframe.html' + '#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
-        files: files.filter(fileIncluded)
+        files: files.filter(fileIncluded),
+        karma: {
+          config: window.__karma__.config
+        }
       }))
     }
   }

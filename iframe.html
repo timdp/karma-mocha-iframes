@@ -29,6 +29,7 @@
   }
 
   var config = JSON.parse(decodeURIComponent(window.location.hash.substr(1)))
+  window.__karma__ = config.karma
   loadScripts(config.files, function (err) {
     if (err != null) {
       console.error(err)
