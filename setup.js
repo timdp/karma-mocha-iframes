@@ -179,7 +179,7 @@
     }
 
     if (config.karma.config.captureConsole) {
-      var levels = keys(console)
+      var levels = ['log', 'info', 'warn', 'error', 'debug']
       for (var i = 0; i < levels.length; ++i) {
         proxyConsole(levels[i])
       }
