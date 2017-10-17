@@ -39,6 +39,21 @@
     return (str.length >= suf.length && str.substr(str.length - suf.length) === suf)
   }
 
+  var safeJsonStringify = function (obj) {
+    var seen = []
+    return JSON.stringify(obj, function (key, value) {
+      if (value == null || typeof value !== 'object') {
+        return value
+      }
+      var idx = seen.indexOf(value)
+      if (idx >= 0) {
+        return '[Circular~' + idx + ']'
+      }
+      seen.push(value)
+      return value
+    })
+  }
+
   var runHost = function () {
     var PKG = 'karma-mocha-iframes'
 
@@ -131,7 +146,7 @@
     window.Mocha.Runner.prototype.runTest = function (fn) {
       currentTest = this.test.fullTitle()
       testCallback = fn
-      iframe.src = baseUri + '/iframe.html' + '#' + encodeURIComponent(JSON.stringify({
+      iframe.src = baseUri + '/iframe.html#' + encodeURIComponent(JSON.stringify({
         test: currentTest,
         files: files.filter(fileIncluded),
         karma: {
@@ -143,7 +158,7 @@
 
   var runGuest = function (config) {
     var send = function (type, data) {
-      var msg = JSON.stringify({
+      var msg = safeJsonStringify({
         type: type,
         data: data
       })
@@ -157,13 +172,11 @@
       }
       console[level] = function () {
         original.apply(console, arguments)
-        try {
-          var args = Array.apply(null, arguments)
-          send('console', {
-            level: level,
-            args: args
-          })
-        } catch (err) {}
+        var args = Array.apply(null, arguments)
+        send('console', {
+          level: level,
+          args: args
+        })
       }
     }
 
