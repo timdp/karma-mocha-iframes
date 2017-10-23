@@ -34,6 +34,7 @@
     if (err != null) {
       console.error(err)
     } else {
+      window.location.hash = ''
       window.mocha.grep('^' + config.test.replace(/(\W)/g, '\\$1') + '$')
       window.mocha.run()
     }
