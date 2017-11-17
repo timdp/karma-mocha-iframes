@@ -189,17 +189,6 @@
       }
     }
 
-    var respond = function (test, error) {
-      send('result', {
-        test: test.fullTitle(),
-        error: (error == null) ? null : {
-          name: error.name,
-          message: error.message,
-          stack: error.stack
-        }
-      })
-    }
-
     if (config.karma.config.captureConsole) {
       var levels = ['log', 'info', 'warn', 'error', 'debug']
       for (var i = 0; i < levels.length; ++i) {
@@ -207,11 +196,29 @@
       }
     }
 
+    var payload = null
+
+    var storeResult = function (test, error) {
+      payload = {
+        test: test.fullTitle(),
+        error: (error == null) ? null : {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        }
+      }
+    }
+
+    var respond = function () {
+      send('result', payload)
+    }
+
     window.mocha.setup({
       ui: 'bdd',
       reporter: function (runner) {
-        runner.on('pass', respond)
-        runner.on('fail', respond)
+        runner.on('pass', storeResult)
+        runner.on('fail', storeResult)
+        runner.on('end', respond)
       }
     })
   }
