@@ -154,6 +154,15 @@
         }
       }))
     }
+
+    var hookNames = ['beforeEach', 'afterEach', 'beforeAll', 'afterAll']
+    var stub = function () {
+      return this
+    }
+    for (var i = 0; i < hookNames.length; ++i) {
+      var hookName = hookNames[i]
+      window.Mocha.Suite.prototype[hookName] = stub
+    }
   }
 
   var runGuest = function (config) {
