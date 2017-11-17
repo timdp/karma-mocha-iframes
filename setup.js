@@ -127,8 +127,8 @@
       }
       var parts = uri.split('/')
       var nmIdx = parts.indexOf('node_modules')
-      return (nmIdx < 0 || parts[nmIdx + 1] === PKG ||
-        parts[nmIdx + 1].substr(0, 6) !== 'karma-')
+      return (nmIdx < 0 || parts[nmIdx + 1] === PKG || (
+        nmIdx + 1 < parts.length && parts[nmIdx + 1].substr(0, 6) !== 'karma-'))
     }
 
     var loc = window.location
